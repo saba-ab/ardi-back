@@ -21,8 +21,5 @@
   ],
   "env": {
     "DATABASE_URL": "@database_url"
-  },
-  "engines": {
-    "node": ">=14.x"
   }
 }
