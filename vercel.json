@@ -11,8 +11,18 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "dist/api/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "dist/$1"
     }
-  ]
+  ],
+  "env": {
+    "DATABASE_URL": "@database_url"
+  },
+  "engines": {
+    "node": ">=14.x"
+  }
 }
