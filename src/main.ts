@@ -1,9 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import { readFileSync } from 'fs';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions = {
+    key: readFileSync('./secrets/private-key.pem'),
+    cert: readFileSync('./secrets/public-certificate.pem'),
+  };
+  const app = await NestFactory.create(AppModule, { httpsOptions });
   const config = new DocumentBuilder()
     .setTitle('Ardi Documentations')
     .setDescription('Ardi backend API documentations')

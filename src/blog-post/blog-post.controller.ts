@@ -42,7 +42,7 @@ export class BlogPostController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBlogPostDto: UpdateBlogPostDto,
   ) {
-    return this.modifyPost(id, updateBlogPostDto);
+    return this.blogPostService.modifyPost(id, updateBlogPostDto);
   }
 
   @ApiOperation({ summary: 'Delete Post' })

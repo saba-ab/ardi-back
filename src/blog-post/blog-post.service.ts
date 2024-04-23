@@ -12,32 +12,44 @@ export class BlogPostService {
     private blogPostRepository: Repository<BlogPost>,
   ) {}
 
-  async getAll() {
+  async getAll(): Promise<BlogPost[]> {
     const posts = await this.blogPostRepository.find();
-    if (posts.length === 0) throw new NotFoundException('Blog posts not found');
+    if (posts.length === 0) throw new NotFoundException('No blog posts found.');
     return posts;
   }
-  async getById(id: number) {
-    if (!id) {
-      return null;
-    }
+
+  async getById(id: number): Promise<BlogPost> {
+    if (!id) return null;
     const post = await this.blogPostRepository.findOneBy({ id });
-    if (!post) throw new NotFoundException('Post not found');
+    if (!post) {
+      throw new NotFoundException('Post not found.');
+    }
     return post;
   }
-  async addPost(createBlogPost: CreateBlogPostDto) {
-    const post = this.blogPostRepository.create(createBlogPost);
-    return this.blogPostRepository.save(post);
+
+  async addPost(createBlogPostDto: CreateBlogPostDto): Promise<BlogPost> {
+    const newPost = this.blogPostRepository.create(createBlogPostDto);
+    return await this.blogPostRepository.save(newPost);
   }
-  async modifyPost(id: number, updateBlogPostDto: UpdateBlogPostDto) {
+
+  async modifyPost(
+    id: number,
+    updateBlogPostDto: UpdateBlogPostDto,
+  ): Promise<BlogPost> {
+    console.log('modifyPost: start');
     const post = await this.getById(id);
-    if (!post) throw new NotFoundException('Post not found');
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
     this.blogPostRepository.merge(post, updateBlogPostDto);
-    return this.blogPostRepository.save(post);
+    const savedPost = await this.blogPostRepository.save(post);
+    return savedPost;
   }
-  async removePost(id: number) {
+
+  async removePost(id: number): Promise<BlogPost> {
     const post = await this.getById(id);
-    if (!post) throw new NotFoundException('Post not found');
-    return this.blogPostRepository.remove(post);
+    if (!post) throw new NotFoundException('Post not found.');
+    return await this.blogPostRepository.remove(post);
   }
 }
